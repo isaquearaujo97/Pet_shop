@@ -20,10 +20,10 @@ const db = mysql.createPool({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     ssl: ssl,
-    waitforConnections: true,
+    waitForConnections: true,
     connectionLimit: 5,
     queueLimit: 0
-})
+});
  
 async function criarBanco() {
     await db.execute(`CREATE TABLE IF NOT EXISTS atendimentos (
@@ -39,7 +39,7 @@ async function criarBanco() {
  
         await db.execute(`CREATE TABLE IF NOT EXISTS usuario (
             id INT PRIMARY KEY AUTO_INCREMENT,
-            email VARCAHR(70) NOT NULL UNIQUE,
+            email VARCHAR(70) NOT NULL UNIQUE,
             senha VARCHAR(255) NOT NULL
             ) ENGINE = InnoDB`)
  
@@ -101,8 +101,8 @@ app.post ("/api/login", async (req,res) => {
         )
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE === "production",
             sameSite: "strict",
+            secure: process.env.NODE_ENV === "production",
             maxAge: 60*60*1000
         })
         res.json({mensagem: "Login Realizado"})
@@ -152,8 +152,8 @@ async function conectarPython(endpoint, atendimentos, res, tipo) {
     }
     const arquivo = Buffer.from(await resposta.arrayBuffer());
     if(tipo === "pdf") {
-        res.setHeader("Content-Type", "application/json")
-        res.setHeader("Content-Disposition", "attachment; filename'relatorio-petshop.pdf'")
+        res.setHeader("Content-Type", "application/pdf")
+        res.setHeader("Content-Disposition", "attachment; filename=relatorio-petshop.pdf")
     }else {
         res.setHeader("Content-Type", "image/png")
         res.setHeader("Content-Disposition", "inline; filename= graficos.png")
