@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")))
 app.use(cookieParser());
 
-const ssl = process.env.DB_SSL_CA ? {ca: process.env.DB_SSL_CA.replace(/\\n/g, "\n"), rejectUnauthorized: true} : { rejectUnauthorized: true}
+const ssl = process.env.DB_SSL_CA ? {ca: process.env.DB_SSL_CA.replace(/\\n/g, "\n"), rejectUnauthorized: true} : {rejectUnauthorized: true}
  
 const db = mysql.createPool({
     host: process.env.HOST,
@@ -20,7 +20,7 @@ const db = mysql.createPool({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     ssl: ssl,
-    waitforconnections: true,
+    waitforConnections: true,
     connectionLimit: 5,
     queueLimit: 0
 })
